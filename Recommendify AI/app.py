@@ -27,7 +27,7 @@ if st.button("Recommendify!"):
     if not query.strip():
         st.warning("Please enter a product name")
     else:
-        st.write("⏳ Running analysis...")
+        st.write("Running analysis...")
         try:
             response = requests.post(
                 "http://localhost:8000/analyze",
@@ -40,18 +40,17 @@ if st.button("Recommendify!"):
 
             data = response.json()
 
-            # Case: Generic product
+           
             if not data.get("success"):
                 st.warning(f"{data.get('error', 'Unknown error')}")
                 st.stop()
 
-            # Case: Successful analysis
-            st.success("✅ Analysis complete!")
+            st.success("Analysis complete!")
 
             st.subheader("Final Verdict")
 
             try:
-                #
+                
                 verdict_data = json.loads(data["verdict"])
                 recommendation = verdict_data.get("recommendation", "N/A")
                 reason = verdict_data.get("reason", "No reason provided.")
