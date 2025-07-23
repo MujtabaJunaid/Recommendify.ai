@@ -1,4 +1,4 @@
-# graph.py
+
 
 from typing import TypedDict, Optional, List, Dict
 from langgraph.graph import StateGraph, END
@@ -23,7 +23,7 @@ class GraphState(TypedDict):
     error: Optional[str]
 
 
-# Node 1: Product specificity check
+
 def run_product_checker(state: GraphState) -> dict:
     result = product_checker(state["query"])
     state["product_type"] = result
@@ -38,42 +38,37 @@ def run_product_checker(state: GraphState) -> dict:
         return state | {"next": "error"}
 
 
-# Node 2: YouTube Search
+
 def run_youtube_search(state: GraphState) -> GraphState:
     ids = youtube_search(state["query"])
     state["video_ids"] = ids
     return state
 
 
-# Node 3: Fetch transcripts
 def run_transcript_fetcher(state: GraphState) -> GraphState:
     tx = fetch_transcripts(state["video_ids"])
     state["transcripts"] = tx
     return state
 
 
-# Node 4: Filter relevant videos
 def run_relevance_filter(state: GraphState) -> GraphState:
     relevant = relevance_filter(state["query"], state["transcripts"])
     state["relevant_videos"] = relevant
     return state
 
 
-# Node 5: Summarize transcripts
 def run_summarizer(state: GraphState) -> GraphState:
     summaries = summarize_transcripts(state["query"], state["relevant_videos"])
     state["summaries"] = summaries
     return state
 
 
-# Node 6: Final verdict
 def run_verdict(state: GraphState) -> GraphState:
     result = aggregate_verdict(state["query"], state["summaries"])
     state["verdict"] = result
     return state
 
 
-# Build LangGraph
 def build_graph():
     workflow = StateGraph(GraphState)
 
